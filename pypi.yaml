@@ -1,0 +1,27 @@
+apiVersion: extensions/v1beta1
+kind: ReplicaSet
+metadata:
+  name: pypi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pypi
+        version: "1"
+    spec:
+      containers:
+        - name: pypi
+          image: "lyled/pypi"
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 5
+            timeoutSeconds: 1
+            periodSeconds: 10
+            failureThreshold: 3
+          ports:
+            - containerPort: 8000
+              name: http
+              protocol: TCP
